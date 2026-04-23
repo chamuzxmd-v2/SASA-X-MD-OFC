@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "baileys": "npm:baileys-dtz",
+    "baileys": "npm:baileyz@letest",
     "express": "^5.2.1",
     "fs-extra": "^11.3.4",
     "pino": "^10.3.1",
