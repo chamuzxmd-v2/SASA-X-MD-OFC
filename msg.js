@@ -1,6 +1,6 @@
 const {
     proto,
-    downloadContentFromMessage,
+ /*7*/   downloadContentFromMessage,
     getContentType
 } = require('baileys')
 const fs = require('fs')
