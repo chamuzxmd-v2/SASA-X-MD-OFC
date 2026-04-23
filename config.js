@@ -19,3 +19,4 @@ module.exports = {
     BOT_FOOTER: '> ＮＩＫＫＡ ＭＩＮＩ Ｖ1',
     CHANNEL_LINK: 'https://whatsapp.com/channel/0029Vb6DWa2FnSzANppXMb1u',
 };
+//💋
