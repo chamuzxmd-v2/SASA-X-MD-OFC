@@ -22,8 +22,6 @@ app.listen(PORT, () => {
     console.log(`
 Don't Forget To Give Star ‼️
 
-POWERD BY SASA X MD 😻
-
 Server running on http://localhost:` + PORT)
 });
 
