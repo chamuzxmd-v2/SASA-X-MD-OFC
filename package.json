@@ -1,5 +1,5 @@
 {
-  "name": "dtec-mini-v2",
+  "name": "sasa-md",
   "version": "1.0.0",
   "description": "WhatsApp Bot with Multi-Number Support",
   "main": "index.js",
@@ -44,8 +44,8 @@
     "bot",
     "multi-device",
     "baileys",
-    "dtec-mini"
+    "sasa-mini-bot"
   ],
-  "author": "Dileepa Tech",
+  "author": "Sasa Coder",
   "license": "MIT"
 }
