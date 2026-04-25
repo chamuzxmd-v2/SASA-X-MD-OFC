@@ -1,202 +1,531 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>SASA X MD PAIR OFFICIAL</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background: black;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SASA X MD PAIR OFFICIAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* CSS Variables for Light/Dark Mode */
+        :root {
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary: #00f2ff;
+            --secondary: #0066ff;
+            --nav-bg: rgba(10, 10, 10, 0.8);
+        }
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 2;
-    }
+        [data-theme="light"] {
+            --bg-color: #f0f2f5;
+            --text-color: #1a1a1a;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --primary: #007bff;
+            --secondary: #00d4ff;
+            --nav-bg: rgba(255, 255, 255, 0.8);
+        }
 
-    .box {
-      width: 320px;
-      padding: 20px;
-      background-color: black;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 0 25px #00f2ff;
-      z-index: 2;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: background 0.3s, color 0.3s;
+        }
 
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; text-shadow: 0 0 5px #0ff, 0 0 20px #0ff; }
-    }
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-    h3, h6 {
-      color: #00f2ff;
-      animation: flicker 2s infinite alternate;
-      margin: 10px 0;
-    }
+        /* Background Animated Circles */
+        .bg-shapes {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.5;
+            animation: float 10s infinite alternate;
+        }
+        .shape:nth-child(1) { width: 300px; height: 300px; background: var(--primary); top: -100px; left: -100px; }
+        .shape:nth-child(2) { width: 250px; height: 250px; background: var(--secondary); bottom: -50px; right: -50px; animation-duration: 15s; }
 
-    .input-container {
-      display: flex;
-      width: 100%;
-      margin-top: 15px;
-    }
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(50px) scale(1.1); }
+        }
 
-    .input-container input,
-    .input-container button {
-      height: 3rem;
-      font-size: 1rem;
-      border: none;
-      outline: none;
-      box-sizing: border-box;
-      transition: none !important;
-      transform: none !important;
-      resize: none !important;
-      appearance: none;
-    }
+        /* Mobile App Container */
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
 
-    .input-container input {
-      width: 70%;
-      border-radius: 0.8rem 0 0 0.8rem;
-      background: #e0f7ff;
-      color: #000;
-      padding-left: 1rem;
-    }
+        /* Top Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            z-index: 10;
+        }
+        .logo-text { font-weight: 800; font-size: 1.2rem; color: var(--primary); }
+        .theme-toggle {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 50%;
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
 
-    .input-container button {
-      width: 30%;
-      border-radius: 0 0.8rem 0.8rem 0;
-      background: #00bfff;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-    }
+        /* Main Content Area */
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px 100px 20px;
+            scroll-behavior: smooth;
+        }
+        main::-webkit-scrollbar { display: none; }
 
-    .input-container button:hover {
-      background: #00ffff;
-      color: #000;
-    }
+        /* Sections */
+        .section { display: none; animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .section.active { display: block; }
 
-    a.centered-text {
-      color: white;
-      display: block;
-      margin-top: 20px;
-      font-weight: bold;
-    }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-    /* Neon dot background animation */
-    .neon-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: black;
-      overflow: hidden;
-      z-index: 1;
-    }
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
 
-    .dot {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: #00ffff;
-      border-radius: 50%;
-      animation: rise 5s linear infinite;
-      opacity: 0.6;
-    }
+        .glass-card h3 { margin-bottom: 5px; color: var(--primary); }
+        .glass-card p { font-size: 0.85rem; opacity: 0.8; margin-bottom: 15px; }
 
-    @keyframes rise {
-      0% {
-        transform: translateY(100vh) scale(0.5);
-        opacity: 0.2;
-      }
-      100% {
-        transform: translateY(-10vh) scale(1);
-        opacity: 1;
-      }
-    }
-  </style>
+        /* Input Styles */
+        .input-group { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; }
+        input {
+            width: 100%; height: 50px;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 0 15px;
+            color: var(--text-color);
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
+            backdrop-filter: blur(5px);
+        }
+        [data-theme="light"] input { background: rgba(255,255,255,0.5); }
+        input:focus { border-color: var(--primary); }
+
+        button.btn-primary {
+            height: 50px; border: none; border-radius: 12px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white; font-weight: 600; font-size: 1rem;
+            cursor: pointer; box-shadow: 0 5px 15px rgba(0, 242, 255, 0.3);
+        }
+        button.btn-primary:active { transform: scale(0.98); }
+
+        /* Live Stats (Typing Effect Box) */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+        .stat-box {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            padding: 15px 5px; border-radius: 15px; text-align: center;
+        }
+        .stat-val { font-weight: 800; font-size: 1.1rem; color: var(--primary); min-height: 25px; }
+        .stat-label { font-size: 0.7rem; opacity: 0.7; text-transform: uppercase; }
+        
+        /* Typing cursor */
+        .type-cursor { display: inline-block; width: 2px; height: 1em; background: var(--primary); animation: blink 1s infinite; vertical-align: middle; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Features List */
+        .features-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+        }
+        .feature-item {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            padding: 12px; border-radius: 12px; font-size: 0.8rem;
+            display: flex; align-items: center; gap: 8px; font-weight: 600;
+        }
+        .feature-item i { color: var(--primary); }
+
+        /* Contact Details */
+        .contact-item {
+            display: flex; align-items: center; gap: 15px; padding: 15px;
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            border-radius: 15px; margin-bottom: 15px; text-decoration: none; color: var(--text-color);
+        }
+        .contact-item i { font-size: 1.5rem; color: var(--primary); }
+
+        /* Bottom Navigation Menu */
+        .bottom-nav {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px;
+            background: var(--nav-bg); backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border); border-radius: 25px;
+            display: flex; justify-content: space-around; padding: 10px 0;
+            z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+            color: var(--text-color); opacity: 0.5; cursor: pointer; text-decoration: none; font-size: 0.75rem;
+        }
+        .nav-item.active { opacity: 1; color: var(--primary); font-weight: 600; transform: translateY(-3px); }
+        .nav-item i { font-size: 1.2rem; }
+
+        /* Footer Typing */
+        .footer-typewriter {
+            position: fixed; bottom: 90px; width: 100%; max-width: 450px;
+            text-align: center; font-size: 0.75rem; opacity: 0.8;
+            font-family: monospace; color: var(--primary);
+        }
+
+        /* Result Code Area */
+        #pair { margin-top: 20px; word-break: break-all; }
+        .code-box {
+            background: rgba(0,0,0,0.5); border: 1px dashed var(--primary);
+            padding: 15px; border-radius: 10px; font-size: 1.5rem; letter-spacing: 3px;
+            color: #fff; cursor: pointer; margin-top: 10px;
+        }
+
+        /* ---------------- Loading Screen ---------------- */
+        #loader {
+            position: fixed; inset: 0; background: var(--bg-color); z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        .double-ring {
+            width: 120px; height: 120px; position: relative;
+            border-radius: 50%; border: 4px solid transparent; border-top-color: var(--primary);
+            animation: spin 2s linear infinite;
+        }
+        .double-ring::before {
+            content: ''; position: absolute; inset: 8px;
+            border-radius: 50%; border: 4px solid transparent; border-bottom-color: var(--secondary);
+            animation: spin 1s linear infinite reverse;
+        }
+        .loader-logo {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 70px; height: 70px; border-radius: 50%; object-fit: cover;
+            animation: pulse 2s infinite;
+        }
+        .loader-text {
+            margin-top: 20px; font-weight: 800; letter-spacing: 2px; color: var(--primary);
+            animation: flicker 1.5s infinite alternate;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.1); } }
+        @keyframes flicker { 0% { opacity: 0.8; text-shadow: 0 0 5px var(--primary); } 100% { opacity: 1; text-shadow: 0 0 20px var(--primary); } }
+    </style>
 </head>
 <body>
-  <div class="neon-bg" id="dots"></div>
 
-  <div class="container">
-    <div class="box" id="box">
-      <div id="text">
-        <i class="fa fa-user" style="color:#00ffff;"></i>
-        <h3>SASA X MD WP BOT</h3>
-        <h6>Powerd By Sasanka Chamuth Fdo</h6>
-        <h6>🔢 Enter your number with country code</h6>
-
-        <div class="input-container">
-          <input placeholder="9476xxxxxxx" type="number" id="number">
-          <button id="submit">Submit</button>
+    <div id="loader">
+        <div style="position: relative; width: 120px; height: 120px;">
+            <div class="double-ring"></div>
+            <img src="https://i.ibb.co/23mW2WNR/73565.png" alt="Logo" class="loader-logo">
         </div>
-
-        <a id="waiting-message" class="centered-text" style="display: none;">Please wait a while...</a>
-        <main id="pair"></main>
-      </div>
+        <div class="loader-text">SASA X MD MINI LOADING</div>
     </div>
-  </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
-  <script>
-    let a = document.getElementById("pair");
-    let b = document.getElementById("submit");
-    let c = document.getElementById("number");
+    <div class="bg-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
 
-    async function Copy() {
-      let text = document.getElementById("copy").innerText;
-      let obj = document.getElementById("copy");
-      await navigator.clipboard.writeText(obj.innerText.replace('CODE: ', ''));
-      obj.innerText = "COPIED";
-      obj.style = "color:blue;font-weight:bold";
-      obj.size = "5";
-      setTimeout(() => {
-        obj.innerText = text;
-        obj.style = "color:white;font-weight-bold";
-        obj.size = "5";
-      }, 500);
-    }
+    <div class="app-container">
+        
+        <header>
+            <div class="logo-text"><i class="fa-brands fa-whatsapp"></i> SASA X MD</div>
+            <div class="theme-toggle" id="themeBtn" onclick="toggleTheme()">
+                <i class="fa-solid fa-moon" id="themeIcon"></i>
+            </div>
+        </header>
 
-    b.addEventListener("click", async (e) => {
-      e.preventDefault();
-      if (!c.value) {
-        a.innerHTML = '<a style="color:white;font-weight:bold">Enter your WhatsApp number with Country Code</a><br><br>';
-      } else if (c.value.replace(/[^0-9]/g, "").length < 11) {
-        a.innerHTML = '<a style="color:red;font-weight:bold">Invalid Number</a><br><br>';
-      } else {
-        const number = c.value.replace(/[^0-9]/g, "");
-        c.type = "text";
-        c.value = "+" + number;
-        c.style = "color:black;font-size:20px";
-        a.innerHTML = '<a style="color:white;font-weight:bold">Please Wait...</a><br><br>';
-        let { data } = await axios(`/code?number=${number}`);
-        let code = data.code || "Service Unavailable";
-        a.innerHTML = `<font id="copy" onclick="Copy()" style="color:red;font-weight:bold" size="5">CODE: <span style="color:white;">${code}</span></font><br><br><br>`;
-      }
-    });
+        <main id="content">
+            
+            <section id="pair-page" class="section active">
+                <div class="glass-card">
+                    <img src="https://i.ibb.co/23mW2WNR/73565.png" alt="Profile" style="width: 70px; border-radius: 50%; margin-bottom: 10px; border: 2px solid var(--primary);">
+                    <h3>PAIR DEVICE</h3>
+                    <p>Powered By Sasanka Chamuth Fdo</p>
+                    
+                    <div class="input-group">
+                        <input type="number" id="number" placeholder="Enter number (e.g. 9476xxxxxxx)">
+                        <button class="btn-primary" id="submit"><i class="fa-solid fa-link"></i> Get Code</button>
+                    </div>
+                    
+                    <div id="pair"></div>
+                </div>
 
-    // Dot animation
-    const bg = document.getElementById("dots");
-    for (let i = 0; i < 80; i++) {
-      const dot = document.createElement("div");
-      dot.classList.add("dot");
-      dot.style.left = Math.random() * 100 + "vw";
-      dot.style.animationDuration = 3 + Math.random() * 5 + "s";
-      dot.style.animationDelay = Math.random() * 5 + "s";
-      bg.appendChild(dot);
-    }
-  </script>
+                <h4 style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;"><i class="fa-solid fa-chart-line"></i> Live System Stats</h4>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-val" id="stat-uptime"></div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-val" id="stat-users"></div>
+                        <div class="stat-label">Users</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-val" id="stat-success"></div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="features-page" class="section">
+                <div class="glass-card" style="margin-bottom: 15px;">
+                    <h3><i class="fa-solid fa-bolt"></i> Premium Features</h3>
+                    <p>Top 20 Working Features Included</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-item"><i class="fa-solid fa-reply"></i> Auto Reply</div>
+                    <div class="feature-item"><i class="fa-solid fa-link-slash"></i> Anti-Link</div>
+                    <div class="feature-item"><i class="fa-solid fa-music"></i> Song DL</div>
+                    <div class="feature-item"><i class="fa-solid fa-video"></i> Video DL</div>
+                    <div class="feature-item"><i class="fa-solid fa-robot"></i> AI Chatbot</div>
+                    <div class="feature-item"><i class="fa-regular fa-face-smile"></i> Sticker Maker</div>
+                    <div class="feature-item"><i class="fa-solid fa-handshake"></i> Group Manager</div>
+                    <div class="feature-item"><i class="fa-solid fa-trash-can-arrow-up"></i> Anti-Delete</div>
+                    <div class="feature-item"><i class="fa-solid fa-eye"></i> Auto Status Read</div>
+                    <div class="feature-item"><i class="fa-solid fa-heart"></i> Auto React</div>
+                    <div class="feature-item"><i class="fa-solid fa-bullhorn"></i> Broadcast</div>
+                    <div class="feature-item"><i class="fa-solid fa-ban"></i> Anti-Spam</div>
+                    <div class="feature-item"><i class="fa-solid fa-language"></i> Translator</div>
+                    <div class="feature-item"><i class="fa-solid fa-volume-high"></i> Text to Speech</div>
+                    <div class="feature-item"><i class="fa-solid fa-image"></i> Image Enhancer</div>
+                    <div class="feature-item"><i class="fa-solid fa-code"></i> Code Runner</div>
+                    <div class="feature-item"><i class="fa-solid fa-gamepad"></i> Mini Games</div>
+                    <div class="feature-item"><i class="fa-solid fa-cloud-sun"></i> Weather Alert</div>
+                    <div class="feature-item"><i class="fa-solid fa-money-bill-transfer"></i> Currency Conv.</div>
+                    <div class="feature-item"><i class="fa-brands fa-tiktok"></i> TikTok DL</div>
+                </div>
+            </section>
+
+            <section id="contact-page" class="section">
+                <div class="glass-card" style="margin-bottom: 20px;">
+                    <h3><i class="fa-solid fa-headset"></i> Support Desk</h3>
+                    <p>Contact us for any issue.</p>
+                </div>
+
+                <a href="https://wa.me/94784167385" class="contact-item">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <div>
+                        <h4 style="font-size: 1rem;">WhatsApp</h4>
+                        <p style="font-size: 0.8rem; opacity: 0.7;">+94 78 416 7385</p>
+                    </div>
+                </a>
+
+                <a href="mailto:supportsasaxmd@gmail.com" class="contact-item">
+                    <i class="fa-regular fa-envelope"></i>
+                    <div>
+                        <h4 style="font-size: 1rem;">Email Support</h4>
+                        <p style="font-size: 0.8rem; opacity: 0.7;">supportsasaxmd@gmail.com</p>
+                    </div>
+                </a>
+            </section>
+
+        </main>
+
+        <div class="footer-typewriter" id="footerText"></div>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="switchPage('pair-page', this)">
+                <i class="fa-solid fa-qrcode"></i>
+                <span>Pair</span>
+            </div>
+            <div class="nav-item" onclick="switchPage('features-page', this)">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>Features</span>
+            </div>
+            <div class="nav-item" onclick="switchPage('contact-page', this)">
+                <i class="fa-solid fa-user-headset"></i>
+                <span>Contact</span>
+            </div>
+        </nav>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
+    
+    <script>
+        // --- 1. Loader Animation (2 Seconds) ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+                startTypingStats(); // Start stats typing after load
+            }, 2000);
+        });
+
+        // --- 2. Menu Switching Logic ---
+        function switchPage(pageId, element) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            element.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- 3. Dark/Light Theme Toggle ---
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                icon.className = 'fa-solid fa-moon';
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.className = 'fa-solid fa-sun';
+            }
+        }
+
+        // --- 4. Fake Stats Typing Animation ---
+        async function typeString(elementId, text, speed) {
+            let i = 0;
+            const el = document.getElementById(elementId);
+            el.innerHTML = '';
+            return new Promise(resolve => {
+                const interval = setInterval(() => {
+                    el.innerHTML = text.substring(0, i + 1) + '<span class="type-cursor"></span>';
+                    i++;
+                    if (i === text.length) {
+                        clearInterval(interval);
+                        el.innerHTML = text; // remove cursor at the end
+                        resolve();
+                    }
+                }, speed);
+            });
+        }
+
+        async function startTypingStats() {
+            // Wait slightly before starting
+            await new Promise(r => setTimeout(r, 500));
+            typeString('stat-uptime', '99.9%', 150);
+            setTimeout(() => typeString('stat-users', '25.4K+', 100), 500);
+            setTimeout(() => typeString('stat-success', '98.5%', 120), 1000);
+        }
+
+        // --- 5. Footer Continuous Typing Animation ---
+        const footerPhrases = [
+            "SASA X MD MINI BOT",
+            "FAST & SECURE WA BOT",
+            "CREATED BY SASANKA CHAMUTH",
+            "ENJOY PREMIUM FEATURES"
+        ];
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const footerEl = document.getElementById('footerText');
+
+        function typeFooter() {
+            const currentPhrase = footerPhrases[phraseIndex];
+            
+            if (isDeleting) {
+                footerEl.innerHTML = currentPhrase.substring(0, charIndex - 1) + ' <i class="fa-solid fa-bolt" style="color:var(--primary)"></i>';
+                charIndex--;
+            } else {
+                footerEl.innerHTML = currentPhrase.substring(0, charIndex + 1) + ' <i class="fa-solid fa-bolt" style="color:var(--primary)"></i>';
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                typeSpeed = 2000; // Pause at end
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % footerPhrases.length;
+                typeSpeed = 500; // Pause before new word
+            }
+
+            setTimeout(typeFooter, typeSpeed);
+        }
+        typeFooter();
+
+        // --- 6. ORIGINAL CORE LOGIC (Untouched, just styles added) ---
+        let a = document.getElementById("pair");
+        let b = document.getElementById("submit");
+        let c = document.getElementById("number");
+      
+        async function Copy() {
+            let obj = document.getElementById("copy-code");
+            let text = obj.innerText;
+            await navigator.clipboard.writeText(text);
+            
+            obj.innerHTML = `<i class="fa-solid fa-check"></i> COPIED`;
+            obj.style.color = "var(--primary)";
+            
+            setTimeout(() => {
+                obj.innerText = text;
+                obj.style.color = "#fff";
+            }, 1500);
+        }
+      
+        b.addEventListener("click", async (e) => {
+            e.preventDefault();
+            if (!c.value) {
+                a.innerHTML = '<div style="color:#ff4757; font-weight:bold; margin-top:10px;"><i class="fa-solid fa-circle-exclamation"></i> Enter your WhatsApp number with Country Code</div>';
+            } else if (c.value.replace(/[^0-9]/g, "").length < 11) {
+                a.innerHTML = '<div style="color:#ff4757; font-weight:bold; margin-top:10px;"><i class="fa-solid fa-circle-xmark"></i> Invalid Number Format</div>';
+            } else {
+                const number = c.value.replace(/[^0-9]/g, "");
+                c.type = "text";
+                c.value = "+" + number;
+                c.style.color = "var(--text-color)";
+                
+                a.innerHTML = '<div style="color:var(--primary); font-weight:bold; margin-top:10px;"><i class="fa-solid fa-spinner fa-spin"></i> Generating Code... Please Wait</div>';
+                
+                try {
+                    let { data } = await axios(`/code?number=${number}`);
+                    let code = data.code || "Unavailable";
+                    
+                    a.innerHTML = `
+                        <div style="margin-top:15px; font-size:0.9rem; color:gray;">Tap the code to copy</div>
+                        <div class="code-box" onclick="Copy()">
+                            <span id="copy-code">${code}</span>
+                        </div>
+                    `;
+                } catch (error) {
+                    a.innerHTML = '<div style="color:#ff4757; font-weight:bold; margin-top:10px;"><i class="fa-solid fa-triangle-exclamation"></i> Service Error. Try Again.</div>';
+                }
+            }
+        });
+    </script>
 </body>
-</html>
+  </html>
